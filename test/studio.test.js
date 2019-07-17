@@ -96,4 +96,21 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete a studio by id', async() => {
+    const studio = await Studio.create({
+      name: 'StudioA',
+      address: {
+        city: 'Portland',
+        state: 'Oregon',
+        country: 'USA'
+      }
+    });
+
+    return request(app)
+      .delete(`/api/v1/studios/${studio._id}`)
+      .then(res => {
+        expect(res.body.name).toEqual('StudioA');
+      });
+  });
 });
