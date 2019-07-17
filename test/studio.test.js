@@ -36,7 +36,7 @@ describe('app routes', () => {
           address: {
             city: 'Portland',
             state: 'Oregon',
-            country: 'USA'
+            country: 'USA',
           },
           __v: 0
         });
@@ -91,8 +91,7 @@ describe('app routes', () => {
             city: 'Portland',
             state: 'Oregon',
             country: 'USA'
-          },
-          __v: 0
+          }
         });
       });
   });
