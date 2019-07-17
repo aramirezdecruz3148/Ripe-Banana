@@ -36,4 +36,26 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get all actors', async() => {
+    const actor = await Actor.create([{
+      name: 'Alex',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Ventura, CA'
+    },
+    {
+      name: 'Lava',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Japan'
+    }]);
+
+    return request(app)
+      .get('/api/v1/actors')
+      .then(res => {
+        const actorsJSON = JSON.parse(JSON.stringify(actor));
+        actorsJSON.forEach(actor => {
+          expect(res.body).toContainEqual({ name: actor.name, _id: actor._id });
+        });
+      });
+  });
 });
