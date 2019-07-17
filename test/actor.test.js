@@ -19,6 +19,21 @@ describe('app routes', () => {
   });
 
   it('can create an actor', () => {
-    
+    return request(app)
+      .post('/api/v1/actors')
+      .send({
+        name: 'Alex',
+        dob: '1988-03-14',  
+        pob: 'Ventura, CA'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Alex',
+          dob: '1988-03-14T00:00:00.000Z',  
+          pob: 'Ventura, CA',
+          __v: 0
+        });
+      });
   });
 });
