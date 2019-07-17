@@ -58,4 +58,23 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a studio back by id', async() => {
+    const actor = await Actor.create({
+      name: 'Alex',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Ventura, CA'
+    });
+
+    return request(app)
+      .get(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          name: 'Alex',
+          dob: '1988-03-14T00:00:00.000Z',
+          pob: 'Ventura, CA',
+          _id: expect.any(String)
+        });
+      });
+  });
 });
