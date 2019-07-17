@@ -70,4 +70,30 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a studio back by id', async() => {
+    const studio = await Studio.create({
+      name: 'StudioA',
+      address: {
+        city: 'Portland',
+        state: 'Oregon',
+        country: 'USA'
+      }
+    });
+
+    return request(app)
+      .get(`/api/v1/studios/${studio._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'StudioA',
+          address: {
+            city: 'Portland',
+            state: 'Oregon',
+            country: 'USA'
+          },
+          __v: 0
+        });
+      });
+  });
 });
