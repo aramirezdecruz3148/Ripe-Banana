@@ -18,6 +18,31 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
+  it('can create a studio', () => {
+    return request(app)
+      .post('/api/v1/studios')
+      .send({
+        name: 'StudioA',
+        address: {
+          city: 'Portland',
+          state: 'Oregon',
+          country: 'USA'
+        }
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'StudioA',
+          address: {
+            city: 'Portland',
+            state: 'Oregon',
+            country: 'USA'
+          },
+          __v: 0
+        });
+      });
+  });
+
   it('can get all studios', async() => {
     const studio = await Studio.create([{
       name: 'StudioA',
