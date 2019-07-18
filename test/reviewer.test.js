@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
-const Reviewer = require('../lib/models/Studio');
+const Reviewer = require('../lib/models/Reviewer');
 
 describe('reviewer routes', () => {
   beforeAll(() => {
@@ -46,11 +46,28 @@ describe('reviewer routes', () => {
     }]);
 
     return request(app)
-      .get('/api/v1/studios')
+      .get('/api/v1/reviewers')
       .then(res => {
         const reviewersJSON = JSON.parse(JSON.stringify(reviewer));
         reviewersJSON.forEach(reviewer => {
           expect(res.body).toContainEqual({ name: reviewer.name, _id: reviewer._id, company: reviewer.company });
+        });
+      });
+  });
+
+  it('can get a reviewer back by id', async() => {
+    const reviewer = await Reviewer.create({
+      name: 'Harry Potter',
+      company: 'Ministry of Magic'
+    });
+
+    return request(app)
+      .get(`/api/v1/reviewers/${reviewer._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Harry Potter',
+          company: 'Ministry of Magic'
         });
       });
   });
