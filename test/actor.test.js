@@ -59,7 +59,7 @@ describe('app routes', () => {
       });
   });
 
-  it('can get a studio back by id', async() => {
+  it('can get a actor back by id', async() => {
     const actor = await Actor.create({
       name: 'Alex',
       dob: '1988-03-14T00:00:00.000Z',
@@ -75,6 +75,44 @@ describe('app routes', () => {
           pob: 'Ventura, CA',
           _id: expect.any(String)
         });
+      });
+  });
+
+  it('can update an actor by id', async() => {
+    const actor = await Actor.create({
+      name: 'Alex',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Ventura, CA'
+    });
+
+    return request(app)
+      .put(`/api/v1/actors/${actor._id}`)
+      .send({
+        name: 'Lava',
+        dob: '1988-03-14T00:00:00.000Z',
+        pob: 'Japan'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Lava',
+          dob: '1988-03-14T00:00:00.000Z',
+          pob: 'Japan'
+        });
+      });
+  });
+
+  it('can delete an actor by id', async() => {
+    const actor = await Actor.create({
+      name: 'Lava',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Japan'
+    });
+
+    return request(app)
+      .delete(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        expect(res.body.name).toEqual('Lava');
       });
   });
 });
