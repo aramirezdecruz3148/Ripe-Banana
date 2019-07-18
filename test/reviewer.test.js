@@ -71,5 +71,26 @@ describe('reviewer routes', () => {
         });
       });
   });
+
+  it('can update a reviewer by id', async() => {
+    const reviewer = await Reviewer.create({
+      name: 'Harry Potter',
+      company: 'Ministry of Magic'
+    });
+
+    return request(app)
+      .put(`/api/v1/reviewers/${reviewer._id}`)
+      .send({
+        name: 'Meany Head',
+        company: 'Poopy'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Meany Head',
+          company: 'Poopy'
+        });
+      });
+  });
 });
 
