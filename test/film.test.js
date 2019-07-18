@@ -119,4 +119,40 @@ describe('film routes', () => {
         });
       });
   });
+
+  it('can get a film back by id', async() => {
+    const film = await Film.create({
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor1._id
+      },
+      {
+        role: 'someone else cool',
+        actor: actor2._id
+      }]
+    });
+
+    return request(app)
+      .get(`/api/v1/films/${film._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          title: 'Coolest Movie',
+          studio: { _id: studio._id, name: studio.name },
+          released: 2017,
+          cast: [{
+            _id: expect.any(String),
+            role: 'someone cool',
+            actor: { _id: actor1._id, name: actor1.name }, 
+          },
+          {
+            _id: expect.any(String),
+            role: 'someone else cool',
+            actor: { _id: actor2._id, name: actor2.name },
+          }]
+        });
+      });
+  });
 });
