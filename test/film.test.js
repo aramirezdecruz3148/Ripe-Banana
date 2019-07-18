@@ -155,4 +155,26 @@ describe('film routes', () => {
         });
       });
   });
+
+  it('can delete a film by id', async() => {
+    const film = await Film.create({
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor1._id
+      },
+      {
+        role: 'someone else cool',
+        actor: actor2._id
+      }]
+    });
+
+    return request(app)
+      .delete(`/api/v1/films/${film._id}`)
+      .then(res => {
+        expect(res.body.title).toEqual('Coolest Movie');
+      });
+  });
 });
