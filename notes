@@ -1,0 +1,3 @@
+//try using new Date('03-14-1988) for date inputs
+//try refactoring to use select to set __v: false, instead of multiple values true
+//try writing static methods within my schemas to make cleaner code when creating references
