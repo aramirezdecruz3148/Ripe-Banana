@@ -72,4 +72,20 @@ describe('review routes', () => {
         });
       });
   });
+
+  it('can return the 100 most recent reviews', async() => {
+    await Promise.all([...Array(101)].map((i) => {
+      return Review.create({
+        rating: 4,
+        reviewer: reviewer._id,
+        review: `This movie is AWESOME ${i}`,
+        film: film._id,
+      });
+    }));
+    return request(app)
+      .get('/api/v1/reviews')
+      .then(res => {
+        expect(res.body).toHaveLength(100);
+      });
+  });
 });
