@@ -5,6 +5,7 @@ const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
 const Actor = require('../lib/models/Actor');
+const Film = require('../lib/models/Film');
 
 describe('film routes', () => {
   beforeAll(() => {
@@ -76,6 +77,45 @@ describe('film routes', () => {
             actor: actor2._id
           }],
           __v: 0
+        });
+      });
+  });
+
+  it('can get all films', async() => {
+    const film = JSON.parse(JSON.stringify(await Film.create([{
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor1._id
+      },
+      {
+        role: 'someone else cool',
+        actor: actor2._id
+      }]
+    },
+    {
+      title: 'Another Cool Movie',
+      studio: studio._id,
+      released: 2019,
+      cast: [{
+        role: 'someone really cool',
+        actor: actor1._id
+      },
+      {
+        role: 'someone else super cool',
+        actor: actor2._id
+      }]
+    }]
+    )));
+
+    return request(app)
+      .get('/api/v1/films')
+      .then(res => {
+        const filmsJSON = JSON.parse(JSON.stringify(film));
+        filmsJSON.forEach(film => {
+          expect(res.body).toContainEqual(film);
         });
       });
   });
