@@ -115,7 +115,7 @@ describe('film routes', () => {
       .then(res => {
         const filmsJSON = JSON.parse(JSON.stringify(film));
         filmsJSON.forEach(film => {
-          expect(res.body).toContainEqual(film);
+          expect(res.body).toContainEqual({ title: film.title, _id: film._id, released: film.released, studio: { _id: studio._id, name: studio.name } });
         });
       });
   });
