@@ -1,0 +1,2 @@
+//Studios cannot be deleted if there are films.
+//actors cannot be deleted who are in films.
