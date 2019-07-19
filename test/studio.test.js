@@ -125,10 +125,26 @@ describe('studio routes', () => {
       }
     });
 
+    const actor = await Actor.create({
+      name: 'Lava',
+      dob: '1974-04-24T00:00:00.000Z',
+      pob: 'Ventura, CA'
+    });
+
+    const film = await Film.create({
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor._id
+      }]
+    });
+
     return request(app)
       .delete(`/api/v1/studios/${studio._id}`)
       .then(res => {
-        expect(res.body.name).toEqual('StudioA');
+        expect(res.status).toEqual(409);
       });
   });
 });
