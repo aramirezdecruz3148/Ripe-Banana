@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
 const Actor = require('../lib/models/Actor');
 const Film = require('../lib/models/Film');
+const Review = require('../lib/models/Review');
+const Reviewer = require('../lib/models/Reviewer');
 
 describe('film routes', () => {
   beforeAll(() => {
@@ -135,6 +137,18 @@ describe('film routes', () => {
       }]
     });
 
+    const reviewer = await Reviewer.create({
+      name: 'Harry Potter',
+      company: 'Ministry of Magic'
+    });
+
+    const review = await Review.create({
+      rating: 3,
+      reviewer: reviewer._id,
+      review: 'this is my review',
+      film: film._id
+    });
+
     return request(app)
       .get(`/api/v1/films/${film._id}`)
       .then(res => {
@@ -151,7 +165,8 @@ describe('film routes', () => {
             _id: expect.any(String),
             role: 'someone else cool',
             actor: { _id: actor2._id, name: actor2.name },
-          }]
+          }],
+          reviews: [{ _id: review._id.toString(), rating: review.rating, review: review.review, reviewer: { _id: reviewer._id.toString(), name: reviewer.name } }]
         });
       });
   });
