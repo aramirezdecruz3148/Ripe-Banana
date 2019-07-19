@@ -115,7 +115,7 @@ describe('studio routes', () => {
       });
   });
 
-  it('can delete a studio by id', async() => {
+  it('can throw an error when attempting to delete a studio that contains a film', async() => {
     const studio = await Studio.create({
       name: 'StudioA',
       address: {
@@ -131,6 +131,7 @@ describe('studio routes', () => {
       pob: 'Ventura, CA'
     });
 
+    // eslint-disable-next-line no-unused-vars
     const film = await Film.create({
       title: 'Coolest Movie',
       studio: studio._id,
@@ -145,6 +146,23 @@ describe('studio routes', () => {
       .delete(`/api/v1/studios/${studio._id}`)
       .then(res => {
         expect(res.status).toEqual(409);
+      });
+  });
+
+  it('can delete a studio that does not contain films', async() => {
+    const studio = await Studio.create({
+      name: 'StudioA',
+      address: {
+        city: 'Portland',
+        state: 'Oregon',
+        country: 'USA'
+      }
+    });
+
+    return request(app)
+      .delete(`/api/v1/studios/${studio._id}`)
+      .then(res => {
+        expect(res.body.name).toEqual('StudioA');
       });
   });
 });
