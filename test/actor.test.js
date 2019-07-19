@@ -4,6 +4,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
+const Film = require('../lib/models/Film');
+const Studio = require('../lib/models/Studio');
 
 describe('actor routes', () => {
   beforeAll(() => {
@@ -59,11 +61,30 @@ describe('actor routes', () => {
       });
   });
 
-  it('can get a actor back by id', async() => {
+  it('can get an actor back by id', async() => {
     const actor = await Actor.create({
       name: 'Alex',
       dob: '1988-03-14T00:00:00.000Z',
       pob: 'Ventura, CA'
+    });
+
+    const studio = await Studio.create({
+      name: 'StudioA',
+      address: {
+        city: 'Portland',
+        state: 'Oregon',
+        country: 'USA'
+      }
+    });
+
+    const film = await Film.create({
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor._id
+      }]
     });
 
     return request(app)
@@ -73,7 +94,8 @@ describe('actor routes', () => {
           name: 'Alex',
           dob: '1988-03-14T00:00:00.000Z',
           pob: 'Ventura, CA',
-          _id: expect.any(String)
+          _id: expect.any(String),
+          films: [{ _id: film._id.toString(), title: film.title, released: film.released }]
         });
       });
   });
