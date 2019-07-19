@@ -1,6 +1,0 @@
-//need to fix Travis error about rake and ruby?!?!?
-
-//need to refactor reviewer .get() reviewers by id to include relationship
-  -to write static method to get reviews, and nested in reviews that specific film
-  -add new method to route
-  -refactor test to account for new method
