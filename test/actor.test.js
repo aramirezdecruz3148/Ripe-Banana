@@ -124,7 +124,7 @@ describe('actor routes', () => {
       });
   });
 
-  it('can delete an actor by id', async() => {
+  it('can delete an actor by id who is not a part of any films', async() => {
     const actor = await Actor.create({
       name: 'Lava',
       dob: '1988-03-14T00:00:00.000Z',
@@ -135,6 +135,40 @@ describe('actor routes', () => {
       .delete(`/api/v1/actors/${actor._id}`)
       .then(res => {
         expect(res.body.name).toEqual('Lava');
+      });
+  });
+
+  it('can will throw an error if you try to delete an actor in films', async() => {
+    const actor = await Actor.create({
+      name: 'Lava',
+      dob: '1988-03-14T00:00:00.000Z',
+      pob: 'Japan'
+    });
+
+    const studio = await Studio.create({
+      name: 'StudioA',
+      address: {
+        city: 'Portland',
+        state: 'Oregon',
+        country: 'USA'
+      }
+    });
+
+    // eslint-disable-next-line no-unused-vars
+    const film = await Film.create({
+      title: 'Coolest Movie',
+      studio: studio._id,
+      released: 2017,
+      cast: [{
+        role: 'someone cool',
+        actor: actor._id
+      }]
+    });
+
+    return request(app)
+      .delete(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        expect(res.status).toEqual(409);
       });
   });
 });
