@@ -14,22 +14,20 @@ module.exports = async({ actors = 50, films = 100, reviews = 100, reviewers = 50
     }))
   );
 
+  const createdStudios = await Studio.create(
+    [...Array(studios)].map(() => ({
+      name: chance.name(),
+      address: { city: chance.city(), state: chance.state(), country: chance.country() }
+    }))
+  );
+
   const createdFilms = await Film.create(
     [...Array(films)].map(() => ({
-      title: chance.title(),
+      title: chance.sentence(),
       studio: chance.pickone(createdStudios)._id,
       released: chance.date(),
       cast: [{ role: chance.name(), actor: chance.pickone(createdActors) }, { role: chance.name(), actor: chance.pickone(createdActors) }, { role: chance.name(), actor: chance.pickone(createdActors) }]
     }))   
-  );
-
-  const createdReviews = await Review.create(
-    [...Array(reviews)].map(() => ({
-      rating: chance.prime({ min: 1, max: 5 }),
-      reviewer: chance.pickone(createdReviewers),
-      review: chance.pickone(createdReviews),
-      film: chance.pickone(createdFilms)
-    }))
   );
 
   const createdReviewers = await Reviewer.create(
@@ -39,10 +37,12 @@ module.exports = async({ actors = 50, films = 100, reviews = 100, reviewers = 50
     }))
   );
 
-  const createdStudios = await Studio.create(
-    [...Array(studios)].map(() => ({
-      name: chance.name(),
-      address: { city: chance.city(), state: chance.state(), country: chance.country() }
+  const createdReviews = await Review.create(
+    [...Array(reviews)].map(() => ({
+      rating: chance.prime({ min: 1, max: 5 }),
+      reviewer: chance.pickone(createdReviewers),
+      review: chance.letter(),
+      film: chance.pickone(createdFilms)
     }))
   );
 
